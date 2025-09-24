@@ -1,7 +1,10 @@
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <style>
+  <meta name="theme-color" content="#2c2c2c">
+  <style id="theme-style">
+    /* === Светлая тема по умолчанию === */
     body {
       font-family: Arial, sans-serif;
       font-size: 18px;
@@ -10,20 +13,65 @@
       background-color: #f9f9f9;
       padding: 15px;
       margin: 0;
+      transition: background-color 0.3s, color 0.3s;
     }
     h1 { color: #d9534f; text-align: center; font-size: 24px; margin-bottom: 20px; }
     h2 { color: #c9302c; border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 20px; }
-    .step { background-color: #f0f8ff; border-left: 4px solid #4674a6; padding: 10px 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
-    .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; padding: 10px; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+    .step {
+      background-color: #f0f8ff;
+      border-left: 4px solid #4674a6;
+      padding: 10px 15px;
+      margin: 15px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    /* === Тёмная тема (добавляется класс .dark) === */
+    body.dark {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+    body.dark h1 { color: #f88; }
+    body.dark h2 { color: #f77; border-bottom-color: #555; }
+    body.dark .step {
+      background-color: #2a2a3a;
+      border-left-color: #6a6aff;
+    }
+    body.dark .warning {
+      background-color: #514000;
+      color: #ffd700;
+      border-color: #887700;
+    }
+    body.dark .warning strong { color: #ffcc00; }
+    body.dark {
+      --bg: #1e1e1e;
+      --text: #e0e0e0;
+      --accent: #6a6aff;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Кнопка переключения (для отладки, потом уберём) -->
+  <!-- Удалить после тестирования -->
+  <div style="text-align: center; margin-bottom: 15px;">
+    <button onclick="toggleDarkMode()">🌙 Переключить тему</button>
+  </div>
+  <!-- Конец кнопки -->
+
   <h1>🆘 Первая помощь при инсульте</h1>
 
-  <div class=\"warning\">При подозрении на инсульт немедленно вызывайте скорую помощь!</div>
+  <div class="warning">При подозрении на инсульт немедленно вызывайте скорую помощь!</div>
 
-  <div class=\"step\">
+  <div class="step">
     <h2>Шаг 1: Вызов скорой помощи</h2>
     <p>При возникновении необходимости срочной медицинской помощи немедленно вызовите скорую.</p>
     <ul>
@@ -33,7 +81,7 @@
     </ul>
   </div>
 
-  <div class=\"step\">
+  <div class="step">
     <h2>Шаг 2: Обеспечение доступа свежего воздуха</h2>
     <p>Проверьте обстановку в помещении:</p>
     <ul>
@@ -42,7 +90,7 @@
     </ul>
   </div>
 
-  <div class=\"step\">
+  <div class="step">
     <h2>Шаг 3: Расслабление одежды</h2>
     <p>Стянуть или расстегнуть одежду, которая сковывает движения или дыхание:</p>
     <ul>
@@ -51,7 +99,7 @@
     </ul>
   </div>
 
-  <div class=\"step\">
+  <div class="step">
     <h2>Шаг 4: Поведение при рвоте</h2>
     <p>Если началась рвота:</p>
     <ul>
@@ -61,7 +109,7 @@
     </ul>
   </div>
 
-  <div class=\"step\">
+  <div class="step">
     <h2>Шаг 5: Мониторинг состояния</h2>
     <p>До приезда медиков внимательно следите за пострадавшим:</p>
     <ul>
@@ -72,12 +120,46 @@
     </ul>
   </div>
 
-  <div class=\"warning\">
+  <div class="warning">
     ❗ Не пытайтесь самостоятельно лечить! Любое промедление снижает шансы на восстановление.
   </div>
 
+  <!-- JavaScript для переключения темы -->
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      // Сохраняем выбор пользователя
+      localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+      // Обновляем цвет статус-бара
+      if (document.body.classList.contains('dark')) {
+        setThemeColor('#1e1e1e');
+      } else {
+        setThemeColor('#EDDEE3');
+      }
+    }
+
+    // Применяем сохранённую тему при загрузке
+    window.onload = function() {
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      if (darkMode) {
+        document.body.classList.add('dark');
+        setThemeColor('#1e1e1e');
+      } else {
+        setThemeColor('#EDDEE3');
+      }
+    };
+
+    // Функция для изменения цвета статус-бара (работает на Android)
+    function setThemeColor(color) {
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', color);
+    }
+
+    // Функция, которую будет вызывать MIT App Inventor
+    function appInventor_toggleDarkMode() {
+      toggleDarkMode();
+    }
+  </script>
+
 </body>
-
 </html>
-
-
